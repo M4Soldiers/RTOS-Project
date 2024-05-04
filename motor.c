@@ -3,15 +3,13 @@
 
 void motorInit()
 {
-	DIO_Init(PORT_A,4, OUT);
-	DIO_Init(PORT_A,3, OUT);
+	DIO_Init(PORT_A,4, OUT); // PORT C PIN 4
+	DIO_Init(PORT_A,3, OUT); // PORT c PIN 3
 
 }
 
 
 void motorUP(){
-//DIO_WritePin(&GPIO_PORTA_DATA_R,4,0);
-//DIO_WritePin(&GPIO_PORTA_DATA_R,3,1);
 
 DIO_WritePin(PORT_A, 4, 0);	
 	DIO_WritePin(PORT_A, 3, 1);	

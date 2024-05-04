@@ -33,7 +33,7 @@ void DIO_Init(uint32_t portNumber, uint32_t pinNumber, uint32_t direction)
             {
                 SET_BIT(GPIO_PORTB_DIR_R, pinNumber);
             }
-            GPIO_PORTB_DEN_R |= (1u<<pinNumber);; //used to digital enable
+            GPIO_PORTB_DEN_R |= (1u<<pinNumber); //used to digital enable
             break;
 
             /******************** PORT C *******************/

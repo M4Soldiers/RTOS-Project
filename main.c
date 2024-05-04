@@ -12,6 +12,14 @@
 #include "motor.h"
 #include "semphr.h" //to enable semahphores
 #define PortF_IRQn 30
+#define GPIO_PORTB_CLK_EN  0x02      //enable clock for PORTB
+#define GPIO_PORTB_PIN2_EN 0x04			 //enable pin 2 of PORTB
+#define GPIO_PORTB_PIN3_EN 0x08			 //enable pin 3 of PORTB
+void DelayPORTB(unsigned int);
+void PORTB_Init(void);
+//#define LED_ON2            0x04			 //turn on  LED on Pin 2 PORTB
+//#define LED_OFF2           0x00			 //turn off  LED on Pin 2 PORTB
+
 /*********** TASKS DECLARATION *******************/
 
 void mainController(void *pvParameters); //MAIN CONTROLLER FUNCTION
@@ -90,6 +98,7 @@ int main( void )
 {
 	//vPORTF_init();
 	InitTask(NULL);
+	PORTB_Init();
 	xBinarySemaphore_Driver = xSemaphoreCreateBinary();
 	xBinarySemaphore_Passenger = xSemaphoreCreateBinary();
 
@@ -122,8 +131,8 @@ void InitTask(void *pvParameters)
 			DIO_Init(PORT_F,3, OUT);
 			DIO_Init(PORT_F,4,IN);
 			motorInit();
-			DIO_Init(PORT_B, 2, IN);
-			DIO_Init(PORT_B,3, IN);
+			//DIO_Init(PORT_D, 0, IN);
+			//DIO_Init(PORT_B,3, IN);
 
 }
 /*-----------------------------------------------------------*/
@@ -131,8 +140,13 @@ void mainController( void *pvParameters )
 {
 	uint32_t windowUP = 0x01;
 	uint32_t windowDown = 0x00;
+	unsigned int portB_Pin3, portB_Pin2;
+
  for( ;; )
  {
+			portB_Pin3 = GPIO_PORTB_DATA_R & 0x08;
+			portB_Pin2 = GPIO_PORTB_DATA_R & 0x04;
+
 	 
 	 	 if((GPIO_PORTF_DATA_R & (1u << 0)) == 0) //Tiva button 0 is pressed
 		{
@@ -146,13 +160,13 @@ void mainController( void *pvParameters )
 			xSemaphoreGive(xBinarySemaphore_Driver);
 	
 		}
-		else if((GPIO_PORTB_DATA_R & (1u << 3)) == 1) // PORT B, PIN 2
+		else if(!portB_Pin3) // PORT B, PIN 3
 		{
 			xQueueSendToBack(xQueue_MainController, &windowUP, 0);	
 			xSemaphoreGive(xBinarySemaphore_Passenger);
 	
 		}
-		else if((GPIO_PORTB_DATA_R & (1u << 2)) == 1) // PORT B, PIN 3
+		else if(!portB_Pin2) // PORT B, PIN 2
 		{
 			xQueueSendToBack(xQueue_MainController, &windowDown, 0);	
 			xSemaphoreGive(xBinarySemaphore_Passenger);
@@ -205,21 +219,44 @@ void passengerControl (void *pvParameter) // This function for passengers contro
 		xQueueReceive(xQueue_MainController,&windowsDirection ,portMAX_DELAY);
 		
 	if(windowsDirection == 1){
-		
-		vToggle_Blue(); //MOTOR_UP
-		while((GPIO_PORTB_DATA_R & (1u << 2)) == 0);
+		motorUP();		vToggle_Blue(); //MOTOR_UP
+		while((GPIO_PORTB_DATA_R & (1u << 3)) == 0); //PORT B pin 3
 	}
 	else if(windowsDirection == 0){
-		
+		motorDOWN();
 		vToggle_Red(); //MOTOR_DOWN
-		while((GPIO_PORTB_DATA_R & (1u << 3)) == 0);
+		while((GPIO_PORTB_DATA_R & (1u << 2)) == 0); //PORT B pin 2
 		
 	}
+		motorOFF();
 		vTurn_OFF();
 		taskYIELD();
 
 	}
 	
-	
-	
+}
+void DelayPORTB(unsigned int delay)
+{
+	volatile unsigned int i, counter;
+	counter = delay * 4000;  // 1 second (1000 msec) needs 40000000 counter so 4000000/1000 = 4000
+	for(i=0;i<counter;i++);
+}
+
+void PORTB_Init(void)
+{
+	SYSCTL_RCGCGPIO_R |= GPIO_PORTB_CLK_EN;           //activate clock for Port B
+  DelayPORTB(10);           															//Delay 10 msec to allow clock to start on PORTB  
+	GPIO_PORTB_LOCK_R = 0x4C4F434B;           				//unlock GPIO of PORTB
+	GPIO_PORTB_CR_R = 0x01;                   				//Enable GPIOPUR register enable to commit
+	GPIO_PORTB_PUR_R |= GPIO_PORTB_PIN3_EN;   				//Enable Pull Up SW on PB3	
+	GPIO_PORTB_PUR_R |= GPIO_PORTB_PIN2_EN;   				//Enable Pull Up SW on PB2	
+	GPIO_PORTB_DEN_R |= GPIO_PORTB_PIN3_EN;        	  // Enable pin 3 of PORTB 
+	GPIO_PORTB_DEN_R |= GPIO_PORTB_PIN2_EN;        	  // Enable pin 2 of PORTB 
+
+	GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN3_EN ; 				// Regular GPIO of PORTB
+  GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN3_EN;        // Disable analog function on pin 3 of PORTB
+	GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN3_EN;        // Regular port function
+	GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN2_EN ; 				// Regular GPIO of PORTB
+  GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Disable analog function on pin 2 of PORTB
+	GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Regular port function
 }
