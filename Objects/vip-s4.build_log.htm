@@ -22,14 +22,283 @@ Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
 D:\Mina\Senior1-sem2\RTOS\Labs\Mina - Project\vip-s4.uvprojx
-Project File Date:  04/17/2024
+Project File Date:  05/04/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target 1'
+motor.c(1): warning: In file included from...
+./motor.h(3): warning: In file included from...
+./dio.h(6): warning: In file included from...
+./bitwise_operation.h(33): warning: no newline at end of file [-Wnewline-eof]
+   33 | //#define READ_BIT(byte,nbit)    ((byte>>nbit)&1)
+      |                                                  ^
+motor.c(1): warning: In file included from...
+./motor.h(3): warning: In file included from...
+./dio.h(16): warning: no newline at end of file [-Wnewline-eof]
+   16 | #endif
+      |       ^
+motor.c(1): warning: In file included from...
+./motor.h(5): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    5 | void motorDOWN();
+      |               ^
+      |                void
+./motor.h(6): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    6 | void motorOFF();
+      |              ^
+      |               void
+./motor.h(7): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | void motorUP();
+      |             ^
+      |              void
+./motor.h(9): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    9 | void motorInit();
+      |               ^
+      |                void
+./motor.h(11): warning: no newline at end of file [-Wnewline-eof]
+   11 | #endif
+      |       ^
+motor.c(4): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    4 | void motorInit()
+      |               ^
+      |                void
+motor.c(4): warning: no previous prototype for function 'motorInit' [-Wmissing-prototypes]
+    4 | void motorInit()
+      |      ^
+./motor.h(9): note: this declaration is not a prototype; add 'void' to make it a prototype for a zero-parameter function
+    9 | void motorInit();
+      |      ^         
+      |                void
+motor.c(12): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   12 | void motorUP(){
+      |             ^
+      |              void
+motor.c(12): warning: no previous prototype for function 'motorUP' [-Wmissing-prototypes]
+   12 | void motorUP(){
+      |      ^
+./motor.h(7): note: this declaration is not a prototype; add 'void' to make it a prototype for a zero-parameter function
+    7 | void motorUP();
+      |      ^       
+      |              void
+motor.c(19): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   19 | void motorDOWN(){
+      |               ^
+      |                void
+motor.c(19): warning: no previous prototype for function 'motorDOWN' [-Wmissing-prototypes]
+   19 | void motorDOWN(){
+      |      ^
+./motor.h(5): note: this declaration is not a prototype; add 'void' to make it a prototype for a zero-parameter function
+    5 | void motorDOWN();
+      |      ^         
+      |                void
+motor.c(25): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   25 | void motorOFF(){
+      |              ^
+      |               void
+motor.c(29): warning: no newline at end of file [-Wnewline-eof]
+   29 | }
+      |  ^
+motor.c(25): warning: no previous prototype for function 'motorOFF' [-Wmissing-prototypes]
+   25 | void motorOFF(){
+      |      ^
+./motor.h(6): note: this declaration is not a prototype; add 'void' to make it a prototype for a zero-parameter function
+    6 | void motorOFF();
+      |      ^        
+      |               void
+16 warnings generated.
+compiling motor.c...
+main.c(12): warning: In file included from...
+./motor.h(3): warning: In file included from...
+./dio.h(6): warning: In file included from...
+./bitwise_operation.h(33): warning: no newline at end of file [-Wnewline-eof]
+   33 | //#define READ_BIT(byte,nbit)    ((byte>>nbit)&1)
+      |                                                  ^
+main.c(12): warning: In file included from...
+./motor.h(3): warning: In file included from...
+./dio.h(16): warning: no newline at end of file [-Wnewline-eof]
+   16 | #endif
+      |       ^
+main.c(12): warning: In file included from...
+./motor.h(5): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    5 | void motorDOWN();
+      |               ^
+      |                void
+./motor.h(6): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    6 | void motorOFF();
+      |              ^
+      |               void
+./motor.h(7): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    7 | void motorUP();
+      |             ^
+      |              void
+./motor.h(9): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    9 | void motorInit();
+      |               ^
+      |                void
+./motor.h(11): warning: no newline at end of file [-Wnewline-eof]
+   11 | #endif
+      |       ^
+main.c(25): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   25 | void vToggle_Blue()
+      |                  ^
+      |                   void
+main.c(25): warning: no previous prototype for function 'vToggle_Blue' [-Wmissing-prototypes]
+   25 | void vToggle_Blue()
+      |      ^
+main.c(25): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   25 | void vToggle_Blue()
+      | ^
+      | static 
+main.c(29): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   29 | void vToggle_Red()
+      |                 ^
+      |                  void
+main.c(29): warning: no previous prototype for function 'vToggle_Red' [-Wmissing-prototypes]
+   29 | void vToggle_Red()
+      |      ^
+main.c(29): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   29 | void vToggle_Red()
+      | ^
+      | static 
+main.c(33): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   33 | void vTurn_OFF()
+      |               ^
+      |                void
+main.c(35): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+   35 |     GPIO_PORTF_DATA_R  &= ~((1<<1)|(1<<2)|(1<<3));      
+      |                        ~~ ^~~~~~~~~~~~~~~~~~~~~~~
+main.c(33): warning: no previous prototype for function 'vTurn_OFF' [-Wmissing-prototypes]
+   33 | void vTurn_OFF()
+      |      ^
+main.c(33): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   33 | void vTurn_OFF()
+      | ^
+      | static 
+main.c(61): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   61 | void vPORTF_init() 
+      |                 ^
+      |                  void
+main.c(70): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+   70 |     GPIO_PORTF_DIR_R   &= ~((1<<0) |(1<<4));                
+      |                        ~~ ^~~~~~~~~~~~~~~~~
+main.c(74): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+   74 |     GPIO_PORTF_DATA_R  &= ~((1<<1)|(1<<2)|(1<<3));      
+      |                        ~~ ^~~~~~~~~~~~~~~~~~~~~~~
+main.c(79): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+   79 |                 GPIO_PORTF_IEV_R &= ~0x11;   // Sense on Low Level
+      |                                  ~~ ^~~~~
+main.c(64): warning: while loop has empty body [-Wempty-body]
+   64 |   while(!(SYSCTL_PRGPIO_R& 0x20));
+      |                                  ^
+main.c(64): note: put the semicolon on a separate line to silence this warning
+main.c(61): warning: no previous prototype for function 'vPORTF_init' [-Wmissing-prototypes]
+   61 | void vPORTF_init() 
+      |      ^
+main.c(61): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   61 | void vPORTF_init() 
+      | ^
+      | static 
+main.c(116): warning: unused parameter 'pvParameters' [-Wunused-parameter]
+  116 | void InitTask(void *pvParameters) 
+      |                     ^
+main.c(130): warning: unused parameter 'pvParameters' [-Wunused-parameter]
+  130 | void mainController( void *pvParameters )
+      |                            ^
+main.c(131): warning: function 'mainController' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  131 | {
+      | ^
+main.c(190): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
+  190 |                 taskYIELD();
+      |                            ^
+main.c(168): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  168 |         uint32_t windowsDirection;
+      |                  ^
+main.c(165): warning: unused parameter 'pvParameter' [-Wunused-parameter]
+  165 | void driverControl (void *pvParameter) // This function for driver controlling passenger's window
+      |                           ^
+main.c(166): warning: function 'driverControl' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  166 | {
+      | ^
+main.c(219): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
+  219 |                 taskYIELD();
+      |                            ^
+main.c(201): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  201 |         uint32_t windowsDirection;
+      |                  ^
+main.c(197): warning: unused parameter 'pvParameter' [-Wunused-parameter]
+  197 | void passengerControl (void *pvParameter) // This function for passengers controlling passenger's window
+      |                              ^
+main.c(198): warning: function 'passengerControl' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  198 | {
+      | ^
+main.c(41): warning: no previous extern declaration for non-static variable 'xQueue_MainController' [-Wmissing-variable-declarations]
+   41 | xQueueHandle xQueue_MainController; //Queue for main controller
+      |              ^
+main.c(41): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   41 | xQueueHandle xQueue_MainController; //Queue for main controller
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1068): note: expanded from macro 'xQueueHandle'
+ 1068 |     #define xQueueHandle                  QueueHandle_t
+      |                                           ^
+main.c(42): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_MainController' [-Wmissing-variable-declarations]
+   42 | xSemaphoreHandle xBinarySemaphore_MainController; // semaphore for main controller
+      |                  ^
+main.c(42): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   42 | xSemaphoreHandle xBinarySemaphore_MainController; // semaphore for main controller
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
+ 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
+      |                                           ^
+main.c(43): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_Driver' [-Wmissing-variable-declarations]
+   43 | xSemaphoreHandle xBinarySemaphore_Driver; // semaphore for main controller
+      |                  ^
+main.c(43): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   43 | xSemaphoreHandle xBinarySemaphore_Driver; // semaphore for main controller
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
+ 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
+      |                                           ^
+main.c(44): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_Passenger' [-Wmissing-variable-declarations]
+   44 | xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
+      |                  ^
+main.c(44): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   44 | xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
+ 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
+      |                                           ^
+main.c(53): warning: no previous extern declaration for non-static variable 'driverControllerHandler' [-Wmissing-variable-declarations]
+   53 | xTaskHandle driverControllerHandler;
+      |             ^
+main.c(53): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   53 | xTaskHandle driverControllerHandler;
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
+ 1067 |     #define xTaskHandle                   TaskHandle_t
+      |                                           ^
+main.c(54): warning: no previous extern declaration for non-static variable 'mainControllerHandler' [-Wmissing-variable-declarations]
+   54 | xTaskHandle mainControllerHandler;
+      |             ^
+main.c(54): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   54 | xTaskHandle mainControllerHandler;
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
+ 1067 |     #define xTaskHandle                   TaskHandle_t
+      |                                           ^
+main.c(55): warning: no previous extern declaration for non-static variable 'passengerControllerHandler' [-Wmissing-variable-declarations]
+   55 | xTaskHandle passengerControllerHandler;
+      |             ^
+main.c(55): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   55 | xTaskHandle passengerControllerHandler;
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
+ 1067 |     #define xTaskHandle                   TaskHandle_t
+      |                                           ^
+38 warnings generated.
+compiling main.c...
 linking...
-Program Size: Code=13020 RO-data=692 RW-data=8 ZI-data=5008  
-".\Objects\vip-s4.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=14040 RO-data=708 RW-data=8 ZI-data=5016  
+".\Objects\vip-s4.axf" - 0 Error(s), 54 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -70,13 +339,13 @@ Package Vendor: Keil
       Include file:  Config/ARMCM/FreeRTOSConfig.h
 
    * Component: ARM::RTOS&FreeRTOS:Core&Cortex-M@10.5.1
+      Include file:  Source/include/task.h
       Source file:   Source/queue.c
+      Source file:   Source/tasks.c
+      Include file:  Source/include/queue.h
       Include file:  Source/include/semphr.h
       Source file:   Source/list.c
       Include file:  Source/include/FreeRTOS.h
-      Include file:  Source/include/queue.h
-      Include file:  Source/include/task.h
-      Source file:   Source/tasks.c
       Source file:   Source/portable/GCC/ARM_CM4F/port.c
       Source file:   CMSIS/RTOS2/FreeRTOS/Source/freertos_evr.c
 
@@ -87,7 +356,7 @@ Package Vendor: Keil
       Include file:  Device/Include/TM4C123/TM4C123.h
       Source file:   Device/Source/system_TM4C123.c
       Source file:   Device/Source/ARM/startup_TM4C123.s
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

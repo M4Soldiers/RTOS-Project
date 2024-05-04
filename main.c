@@ -2,13 +2,14 @@
 #include "FreeRTOS.h" 
 #include "FreeRTOSConfig.h"
 #include "task.h" 
-#include "tm4c123gh6pm.h"
+//#include "tm4c123gh6pm.h"
 #include <string.h>
 #include <stdio.h>
-#include "uart.h"
-#include "dio.h"
+//#include "uart.h"
+//#include "dio.h"
 #include "queue.h"
 #include <stdlib.h>
+#include "motor.h"
 #include "semphr.h" //to enable semahphores
 #define PortF_IRQn 30
 /*********** TASKS DECLARATION *******************/
@@ -51,6 +52,7 @@ xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
 
 xTaskHandle driverControllerHandler;
 xTaskHandle mainControllerHandler;
+xTaskHandle passengerControllerHandler;
 
 
 /*************************************************/
@@ -89,7 +91,7 @@ int main( void )
 	//vPORTF_init();
 	InitTask(NULL);
 	xBinarySemaphore_Driver = xSemaphoreCreateBinary();
-	//xBinarySemaphore_Passenger = xSemaphoreCreateBinary();
+	xBinarySemaphore_Passenger = xSemaphoreCreateBinary();
 
   xQueue_MainController = xQueueCreate(1 , sizeof(long));
 
@@ -97,6 +99,7 @@ int main( void )
 	{
 	xTaskCreate(driverControl,"Driver Control",180,NULL,2,&driverControllerHandler);
 	xTaskCreate(mainController,"main Control",180,NULL,1,&mainControllerHandler);
+	xTaskCreate(passengerControl,"Passenger Control",180,NULL,2,&passengerControllerHandler);
 
 	vTaskStartScheduler();	
 	}
@@ -118,6 +121,10 @@ void InitTask(void *pvParameters)
 			DIO_Init(PORT_F,2, OUT);
 			DIO_Init(PORT_F,3, OUT);
 			DIO_Init(PORT_F,4,IN);
+			motorInit();
+			DIO_Init(PORT_B, 2, IN);
+			DIO_Init(PORT_B,3, IN);
+
 }
 /*-----------------------------------------------------------*/
 void mainController( void *pvParameters )
@@ -126,6 +133,7 @@ void mainController( void *pvParameters )
 	uint32_t windowDown = 0x00;
  for( ;; )
  {
+	 
 	 	 if((GPIO_PORTF_DATA_R & (1u << 0)) == 0) //Tiva button 0 is pressed
 		{
 			xQueueSendToBack(xQueue_MainController, &windowUP, 0);	
@@ -138,17 +146,17 @@ void mainController( void *pvParameters )
 			xSemaphoreGive(xBinarySemaphore_Driver);
 	
 		}
-//		else if((GPIO_PORTF_DATA_R & (1u << 1)) == 0) // PORT B, PIN 1
-//		{
-//			xQueueSendToBack(xQueue_MainController, &windowUP, 0);	
-//			xSemaphoreGive(xBinarySemaphore_Passenger);
-//	
-//		}
-//		else if((GPIO_PORTF_DATA_R & (1u << 1)) == 0) // PORT B, PIN 2
-//		{
-//			xQueueSendToBack(xQueue_MainController, &windowDown, 0);	
-//			xSemaphoreGive(xBinarySemaphore_Passenger);
-//		}
+		else if((GPIO_PORTB_DATA_R & (1u << 3)) == 1) // PORT B, PIN 2
+		{
+			xQueueSendToBack(xQueue_MainController, &windowUP, 0);	
+			xSemaphoreGive(xBinarySemaphore_Passenger);
+	
+		}
+		else if((GPIO_PORTB_DATA_R & (1u << 2)) == 1) // PORT B, PIN 3
+		{
+			xQueueSendToBack(xQueue_MainController, &windowDown, 0);	
+			xSemaphoreGive(xBinarySemaphore_Passenger);
+		}
 	 
  }
 }
@@ -156,7 +164,6 @@ void mainController( void *pvParameters )
 /*-----------------------------------------------------------*/
 void driverControl (void *pvParameter) // This function for driver controlling passenger's window
 {
-		int counter = 0;
 			xSemaphoreTake(xBinarySemaphore_Driver,0);
 	uint32_t windowsDirection;
 	for(;;)
@@ -167,22 +174,45 @@ void driverControl (void *pvParameter) // This function for driver controlling p
 	if(windowsDirection == 1){
 		
 		vToggle_Blue(); //MOTOR_UP
-		while((GPIO_PORTF_DATA_R & (1u << 0)) == 0)
-		{
-			counter = counter+1;
-		}
-		if(counter > 5)
-		{
-			
-		for(int i=0;i < 1000;i++){}
+		motorUP();
+		while((GPIO_PORTF_DATA_R & (1u << 0)) == 0);
 		
-		}
 		}
 		
 	else if(windowsDirection == 0){
-		
+		motorDOWN();
 		vToggle_Red();//MOTOR_DOWN
 		while((GPIO_PORTF_DATA_R & (1u << 4)) == 0);
+		
+	}
+		vTurn_OFF();
+		motorOFF();
+		taskYIELD();
+
+	}
+	
+	
+} 
+/*-----------------------------------------------------------*/
+void passengerControl (void *pvParameter) // This function for passengers controlling passenger's window
+{
+	
+			xSemaphoreTake(xBinarySemaphore_Passenger,0);
+	uint32_t windowsDirection;
+	for(;;)
+	{
+		xSemaphoreTake(xBinarySemaphore_Passenger,portMAX_DELAY);
+		xQueueReceive(xQueue_MainController,&windowsDirection ,portMAX_DELAY);
+		
+	if(windowsDirection == 1){
+		
+		vToggle_Blue(); //MOTOR_UP
+		while((GPIO_PORTB_DATA_R & (1u << 2)) == 0);
+	}
+	else if(windowsDirection == 0){
+		
+		vToggle_Red(); //MOTOR_DOWN
+		while((GPIO_PORTB_DATA_R & (1u << 3)) == 0);
 		
 	}
 		vTurn_OFF();
@@ -191,34 +221,5 @@ void driverControl (void *pvParameter) // This function for driver controlling p
 	}
 	
 	
-} 
-/*-----------------------------------------------------------*/
-//void passengerControl (void *pvParameter) // This function for passengers controlling passenger's window
-//{
-//	
-//	xSemaphoreTake(xBinarySemaphore_MainController,0);
-//	uint32_t windowsDirection;
-//	for(;;)
-//	{
-//		xSemaphoreTake(xBinarySemaphore_Passenger,portMAX_DELAY);
-//		xQueueReceive(xQueue_MainController,&windowsDirection ,portMAX_DELAY);
-//		
-//	if(windowsDirection == 1){
-//		
-//		vToggle_Blue(); //MOTOR_UP
-//		while((GPIO_PORTF_DATA_R & (1u << 0)) == 0);
-//	}
-//	else if(windowsDirection == 0){
-//		
-//		vToggle_Red(); //MOTOR_DOWN
-//		while((GPIO_PORTF_DATA_R & (1u << 4)) == 0);
-//		
-//	}
-//		vTurn_OFF();
-//		taskYIELD();
-
-//	}
-//	
-//	
-//	
-//}
+	
+}
