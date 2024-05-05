@@ -138,209 +138,227 @@ main.c(12): warning: In file included from...
 ./motor.h(11): warning: no newline at end of file [-Wnewline-eof]
    11 | #endif
       |       ^
-main.c(54): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
-   54 | void vToggle_Blue()
+main.c(57): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   57 | void vToggle_Blue()
       |                  ^
       |                   void
-main.c(54): warning: no previous prototype for function 'vToggle_Blue' [-Wmissing-prototypes]
-   54 | void vToggle_Blue()
+main.c(57): warning: no previous prototype for function 'vToggle_Blue' [-Wmissing-prototypes]
+   57 | void vToggle_Blue()
       |      ^
-main.c(54): note: declare 'static' if the function is not intended to be used outside of this translation unit
-   54 | void vToggle_Blue()
+main.c(57): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   57 | void vToggle_Blue()
       | ^
       | static 
-main.c(58): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
-   58 | void vToggle_Red()
+main.c(61): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   61 | void vToggle_Red()
       |                 ^
       |                  void
-main.c(58): warning: no previous prototype for function 'vToggle_Red' [-Wmissing-prototypes]
-   58 | void vToggle_Red()
+main.c(61): warning: no previous prototype for function 'vToggle_Red' [-Wmissing-prototypes]
+   61 | void vToggle_Red()
       |      ^
-main.c(58): note: declare 'static' if the function is not intended to be used outside of this translation unit
-   58 | void vToggle_Red()
+main.c(61): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   61 | void vToggle_Red()
       | ^
       | static 
-main.c(62): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
-   62 | void vTurn_OFF()
+main.c(65): warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+   65 | void vTurn_OFF()
       |               ^
       |                void
-main.c(64): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-   64 |     GPIO_PORTF_DATA_R  &= ~((1<<1)|(1<<2)|(1<<3));      
+main.c(67): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+   67 |     GPIO_PORTF_DATA_R  &= ~((1<<1)|(1<<2)|(1<<3));      
       |                        ~~ ^~~~~~~~~~~~~~~~~~~~~~~
-main.c(62): warning: no previous prototype for function 'vTurn_OFF' [-Wmissing-prototypes]
-   62 | void vTurn_OFF()
+main.c(65): warning: no previous prototype for function 'vTurn_OFF' [-Wmissing-prototypes]
+   65 | void vTurn_OFF()
       |      ^
-main.c(62): note: declare 'static' if the function is not intended to be used outside of this translation unit
-   62 | void vTurn_OFF()
+main.c(65): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   65 | void vTurn_OFF()
       | ^
       | static 
-main.c(113): warning: unused parameter 'pvParameters' [-Wunused-parameter]
-  113 | void mainController( void *pvParameters )
+main.c(116): warning: unused parameter 'pvParameters' [-Wunused-parameter]
+  116 | void mainController( void *pvParameters )
       |                            ^
-main.c(114): warning: function 'mainController' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
-  114 | {
+main.c(117): warning: function 'mainController' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  117 | {
       | ^
-main.c(187): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-  187 |                 taskYIELD();
+main.c(192): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
+  192 |                 taskYIELD();
       |                            ^
-main.c(158): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
-  158 |         uint32_t windowsDirection;
+main.c(161): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  161 |         uint32_t windowsDirection;
       |                  ^
-main.c(155): warning: unused parameter 'pvParameter' [-Wunused-parameter]
-  155 | void driverControl (void *pvParameter) // This function for driver controlling passenger's window
+main.c(158): warning: unused parameter 'pvParameter' [-Wunused-parameter]
+  158 | void driverControl (void *pvParameter) // This function for driver controlling passenger's window
       |                           ^
-main.c(156): warning: function 'driverControl' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
-  156 | {
+main.c(159): warning: function 'driverControl' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  159 | {
       | ^
-main.c(223): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-  223 |                 taskYIELD();
+main.c(234): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
+  234 |                 taskYIELD();
       |                            ^
-main.c(198): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
-  198 |         uint32_t windowsDirection;
+main.c(203): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  203 |         uint32_t windowsDirection;
       |                  ^
-main.c(194): warning: unused parameter 'pvParameter' [-Wunused-parameter]
-  194 | void passengerControl (void *pvParameter) // This function for passengers controlling passenger's window
+main.c(199): warning: unused parameter 'pvParameter' [-Wunused-parameter]
+  199 | void passengerControl (void *pvParameter) // This function for passengers controlling passenger's window
       |                              ^
-main.c(195): warning: function 'passengerControl' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
-  195 | {
+main.c(200): warning: function 'passengerControl' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  200 | {
       | ^
-main.c(258): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
-  258 |                 taskYIELD();
+main.c(269): warning: empty expression statement has no effect; remove unnecessary ';' to silence this warning [-Wextra-semi-stmt]
+  269 |                 taskYIELD();
       |                            ^
-main.c(232): warning: unused parameter 'pvParameters' [-Wunused-parameter]
-  232 | static void vJammingTask( void *pvParameters )
+main.c(243): warning: unused parameter 'pvParameters' [-Wunused-parameter]
+  243 | static void vJammingTask( void *pvParameters )
       |                                 ^
-main.c(233): warning: function 'vJammingTask' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
-  233 | {
+main.c(244): warning: function 'vJammingTask' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+  244 | {
       | ^
-main.c(265): warning: unused parameter 'pvParameters' [-Wunused-parameter]
-  265 | void InitTask(void *pvParameters) 
+main.c(276): warning: unused parameter 'pvParameters' [-Wunused-parameter]
+  276 | void InitTask(void *pvParameters) 
       |                     ^
-main.c(302): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  302 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN6_EN ;                              // Regular GPIO of PORTB
-      |                           ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(303): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  303 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN6_EN;        // Disable analog function on pin 6 of PORTB
-      |                      ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(304): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  304 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN6_EN;        // Regular port function
-      |                            ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(305): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  305 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN7_EN ;                              // Regular GPIO of PORTB
-      |                           ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(306): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  306 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN7_EN;        // Disable analog function on pin 7 of PORTB
-      |                      ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(307): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  307 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN7_EN;        // Regular port function
-      |                            ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(309): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  309 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN3_EN ;                              // Regular GPIO of PORTB
-      |                           ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(310): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  310 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN3_EN;        // Disable analog function on pin 3 of PORTB
-      |                      ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(311): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  311 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN3_EN;        // Regular port function
-      |                            ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(312): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  312 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN2_EN ;                              // Regular GPIO of PORTB
-      |                           ~~ ^~~~~~~~~~~~~~~~~~~
 main.c(313): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  313 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Disable analog function on pin 2 of PORTB
-      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+  313 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN6_EN ;                              // Regular GPIO of PORTB
+      |                           ~~ ^~~~~~~~~~~~~~~~~~~
 main.c(314): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
-  314 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Regular port function
+  314 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN6_EN;        // Disable analog function on pin 6 of PORTB
+      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(315): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  315 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN6_EN;        // Regular port function
       |                            ~~ ^~~~~~~~~~~~~~~~~~~
-main.c(406): warning: no newline at end of file [-Wnewline-eof]
-  406 | //}
+main.c(316): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  316 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN7_EN ;                              // Regular GPIO of PORTB
+      |                           ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(317): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  317 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN7_EN;        // Disable analog function on pin 7 of PORTB
+      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(318): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  318 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN7_EN;        // Regular port function
+      |                            ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(320): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  320 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN3_EN ;                              // Regular GPIO of PORTB
+      |                           ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(321): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  321 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN3_EN;        // Disable analog function on pin 3 of PORTB
+      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(322): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  322 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN3_EN;        // Regular port function
+      |                            ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(323): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  323 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN2_EN ;                              // Regular GPIO of PORTB
+      |                           ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(324): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  324 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Disable analog function on pin 2 of PORTB
+      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(325): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  325 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Regular port function
+      |                            ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(334): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  334 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN5_EN ;                              // Regular GPIO of PORTB
+      |                           ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(335): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  335 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN5_EN;        // Disable analog function on pin 5 of PORTB
+      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(336): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  336 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN5_EN;        // Regular port function
+      |                            ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(337): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  337 |         GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN4_EN ;                              // Regular GPIO of PORTB
+      |                           ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(338): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  338 |   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN4_EN;        // Disable analog function on pin 4 of PORTB
+      |                      ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(339): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+  339 |         GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN4_EN;        // Regular port function
+      |                            ~~ ^~~~~~~~~~~~~~~~~~~
+main.c(431): warning: no newline at end of file [-Wnewline-eof]
+  431 | //}
       |    ^
-main.c(69): warning: no previous extern declaration for non-static variable 'xQueue_MainController' [-Wmissing-variable-declarations]
-   69 | xQueueHandle xQueue_MainController; //Queue for main controller
+main.c(72): warning: no previous extern declaration for non-static variable 'xQueue_MainController' [-Wmissing-variable-declarations]
+   72 | xQueueHandle xQueue_MainController; //Queue for main controller
       |              ^
-main.c(69): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   69 | xQueueHandle xQueue_MainController; //Queue for main controller
+main.c(72): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   72 | xQueueHandle xQueue_MainController; //Queue for main controller
       | ^
 C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1068): note: expanded from macro 'xQueueHandle'
  1068 |     #define xQueueHandle                  QueueHandle_t
       |                                           ^
-main.c(70): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_MainController' [-Wmissing-variable-declarations]
-   70 | xSemaphoreHandle xBinarySemaphore_MainController; // semaphore for main controller
-      |                  ^
-main.c(70): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   70 | xSemaphoreHandle xBinarySemaphore_MainController; // semaphore for main controller
-      | ^
-C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
- 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
-      |                                           ^
-main.c(71): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_Driver' [-Wmissing-variable-declarations]
-   71 | xSemaphoreHandle xBinarySemaphore_Driver; // semaphore for main controller
-      |                  ^
-main.c(71): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   71 | xSemaphoreHandle xBinarySemaphore_Driver; // semaphore for main controller
-      | ^
-C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
- 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
-      |                                           ^
-main.c(72): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_Passenger' [-Wmissing-variable-declarations]
-   72 | xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
-      |                  ^
-main.c(72): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   72 | xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
-      | ^
-C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
- 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
-      |                                           ^
-main.c(73): warning: no previous extern declaration for non-static variable 'xJammingSemaphore' [-Wmissing-variable-declarations]
-   73 | xSemaphoreHandle xJammingSemaphore;
+main.c(73): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_MainController' [-Wmissing-variable-declarations]
+   73 | xSemaphoreHandle xBinarySemaphore_MainController; // semaphore for main controller
       |                  ^
 main.c(73): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   73 | xSemaphoreHandle xJammingSemaphore;
+   73 | xSemaphoreHandle xBinarySemaphore_MainController; // semaphore for main controller
       | ^
 C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
  1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
       |                                           ^
-main.c(76): warning: no previous extern declaration for non-static variable 'driverControllerHandler' [-Wmissing-variable-declarations]
-   76 | xTaskHandle driverControllerHandler;
-      |             ^
+main.c(74): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_Driver' [-Wmissing-variable-declarations]
+   74 | xSemaphoreHandle xBinarySemaphore_Driver; // semaphore for main controller
+      |                  ^
+main.c(74): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   74 | xSemaphoreHandle xBinarySemaphore_Driver; // semaphore for main controller
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
+ 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
+      |                                           ^
+main.c(75): warning: no previous extern declaration for non-static variable 'xBinarySemaphore_Passenger' [-Wmissing-variable-declarations]
+   75 | xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
+      |                  ^
+main.c(75): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   75 | xSemaphoreHandle xBinarySemaphore_Passenger; // semaphore for main controller
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
+ 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
+      |                                           ^
+main.c(76): warning: no previous extern declaration for non-static variable 'xJammingSemaphore' [-Wmissing-variable-declarations]
+   76 | xSemaphoreHandle xJammingSemaphore;
+      |                  ^
 main.c(76): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   76 | xTaskHandle driverControllerHandler;
+   76 | xSemaphoreHandle xJammingSemaphore;
       | ^
-C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
- 1067 |     #define xTaskHandle                   TaskHandle_t
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1069): note: expanded from macro 'xSemaphoreHandle'
+ 1069 |     #define xSemaphoreHandle              SemaphoreHandle_t
       |                                           ^
-main.c(77): warning: no previous extern declaration for non-static variable 'mainControllerHandler' [-Wmissing-variable-declarations]
-   77 | xTaskHandle mainControllerHandler;
-      |             ^
-main.c(77): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   77 | xTaskHandle mainControllerHandler;
-      | ^
-C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
- 1067 |     #define xTaskHandle                   TaskHandle_t
-      |                                           ^
-main.c(78): warning: no previous extern declaration for non-static variable 'passengerControllerHandler' [-Wmissing-variable-declarations]
-   78 | xTaskHandle passengerControllerHandler;
-      |             ^
-main.c(78): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   78 | xTaskHandle passengerControllerHandler;
-      | ^
-C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
- 1067 |     #define xTaskHandle                   TaskHandle_t
-      |                                           ^
-main.c(79): warning: no previous extern declaration for non-static variable 'jammingHandler' [-Wmissing-variable-declarations]
-   79 | xTaskHandle jammingHandler;
+main.c(79): warning: no previous extern declaration for non-static variable 'driverControllerHandler' [-Wmissing-variable-declarations]
+   79 | xTaskHandle driverControllerHandler;
       |             ^
 main.c(79): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   79 | xTaskHandle jammingHandler;
+   79 | xTaskHandle driverControllerHandler;
       | ^
 C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
  1067 |     #define xTaskHandle                   TaskHandle_t
       |                                           ^
-50 warnings generated.
+main.c(80): warning: no previous extern declaration for non-static variable 'mainControllerHandler' [-Wmissing-variable-declarations]
+   80 | xTaskHandle mainControllerHandler;
+      |             ^
+main.c(80): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   80 | xTaskHandle mainControllerHandler;
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
+ 1067 |     #define xTaskHandle                   TaskHandle_t
+      |                                           ^
+main.c(81): warning: no previous extern declaration for non-static variable 'passengerControllerHandler' [-Wmissing-variable-declarations]
+   81 | xTaskHandle passengerControllerHandler;
+      |             ^
+main.c(81): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   81 | xTaskHandle passengerControllerHandler;
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
+ 1067 |     #define xTaskHandle                   TaskHandle_t
+      |                                           ^
+main.c(82): warning: no previous extern declaration for non-static variable 'jammingHandler' [-Wmissing-variable-declarations]
+   82 | xTaskHandle jammingHandler;
+      |             ^
+main.c(82): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   82 | xTaskHandle jammingHandler;
+      | ^
+C:/Users/HP/AppData/Local/Arm/Packs/ARM/CMSIS-FreeRTOS/10.5.1/Source/include\FreeRTOS.h(1067): note: expanded from macro 'xTaskHandle'
+ 1067 |     #define xTaskHandle                   TaskHandle_t
+      |                                           ^
+56 warnings generated.
 compiling main.c...
 linking...
-Program Size: Code=15228 RO-data=724 RW-data=8 ZI-data=5024  
-".\Objects\vip-s4.axf" - 0 Error(s), 66 Warning(s).
+Program Size: Code=15436 RO-data=724 RW-data=8 ZI-data=5024  
+".\Objects\vip-s4.axf" - 0 Error(s), 72 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -398,7 +416,7 @@ Package Vendor: Keil
       Include file:  Device/Include/TM4C123/TM4C123.h
       Source file:   Device/Source/ARM/startup_TM4C123.s
       Source file:   Device/Source/system_TM4C123.c
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

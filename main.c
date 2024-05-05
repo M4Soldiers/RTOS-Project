@@ -26,6 +26,9 @@ RED -> MOTOR DOWN
 #define GPIO_PORTB_PIN1_EN 0x02 		 //enable pin 1 of PORTB
 #define GPIO_PORTB_PIN2_EN 0x04			 //enable pin 2 of PORTB
 #define GPIO_PORTB_PIN3_EN 0x08			 //enable pin 3 of PORTB
+
+#define GPIO_PORTB_PIN4_EN 0x010			 //enable pin 4 of PORTB used for ON/OFF Switch
+#define GPIO_PORTB_PIN5_EN 0x020			 //enable pin 5 of PORTB used for limit switch for window down
 #define GPIO_PORTB_PIN6_EN 0x040			 //enable pin 6 of PORTB used for limit switch for window up
 #define GPIO_PORTB_PIN7_EN 0x080			 //enable pin 7 of PORTB used to trigger jamming
 /************************PORT D******************************/
@@ -167,7 +170,8 @@ void driverControl (void *pvParameter) // This function for driver controlling p
 		vToggle_Blue(); //MOTOR_UP
 		motorUP();
 		while(((GPIO_PORTF_DATA_R & (1u << 0)) == 0) && ((GPIO_PORTB_DATA_R & (1u << 7)) != 0) && ((GPIO_PORTB_DATA_R & (1u << 6)) != 0));
-		if((GPIO_PORTB_DATA_R & (1u << 7)) == 0)
+		//PF0 is for motor UP, PB6 is for limit switch, PB7 is for jamming!
+		if((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs
 		{
 			xSemaphoreGive(xJammingSemaphore);	
 			vTaskPrioritySet(jammingHandler, 3);
@@ -179,7 +183,8 @@ void driverControl (void *pvParameter) // This function for driver controlling p
 	else if(windowsDirection == 0){
 		motorDOWN();
 		vToggle_Red();//MOTOR_DOWN
-		while((GPIO_PORTF_DATA_R & (1u << 4)) == 0);
+		//PF4 is for motor down, PB5 is for limit switch
+		while(((GPIO_PORTF_DATA_R & (1u << 4)) == 0) && ((GPIO_PORTB_DATA_R & (1u << 5)) != 0));
 		
 	}
 		vTurn_OFF();
@@ -200,24 +205,30 @@ void passengerControl (void *pvParameter) // This function for passengers contro
 	{
 		xSemaphoreTake(xBinarySemaphore_Passenger,portMAX_DELAY);
 		xQueueReceive(xQueue_MainController,&windowsDirection ,portMAX_DELAY);
+				if((GPIO_PORTB_DATA_R & (1u << 4)) != 0)// if on/off switch on -> indicating passenger's control is deactivated
+		{
 
 	if(windowsDirection == 1){
 		motorUP();		
 		vToggle_Blue(); //MOTOR_UP
 		while(((GPIO_PORTB_DATA_R & (1u << 3)) == 0)&& ((GPIO_PORTB_DATA_R & (1u << 7)) != 0) && ((GPIO_PORTB_DATA_R & (1u << 6)) != 0));
-		if((GPIO_PORTB_DATA_R & (1u << 7)) == 0)
+			// PB3 is for motor up, PB7 is for jamming, PB6 is for limit switch
+		if((GPIO_PORTB_DATA_R & (1u << 7)) == 0)// if jamming occurs
 		{
 			xSemaphoreGive(xJammingSemaphore);	
 			vTaskPrioritySet(jammingHandler, 3);
 		}
 		
+		
 	}
 	else if(windowsDirection == 0){
 		motorDOWN();
 		vToggle_Red(); //MOTOR_DOWN
-		while((GPIO_PORTB_DATA_R & (1u << 2)) == 0); //PORT B pin 2
+		while(((GPIO_PORTB_DATA_R & (1u << 2)) == 0 )&& ((GPIO_PORTB_DATA_R & (1u << 5)) != 0)); 
+		// PB2 is for motor down, PB5 is for limit switch
 		
 	}
+}
 		motorOFF();
 		vTurn_OFF();
 		taskYIELD();
@@ -312,6 +323,20 @@ void PORTB_Init(void)
 	GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN2_EN ; 				// Regular GPIO of PORTB
   GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Disable analog function on pin 2 of PORTB
 	GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN2_EN;        // Regular port function
+	
+	
+	GPIO_PORTB_PUR_R |= GPIO_PORTB_PIN5_EN;   				//Enable Pull Up SW on PB5	
+	GPIO_PORTB_PUR_R |= GPIO_PORTB_PIN4_EN;   				//Enable Pull Up SW on PB4	
+	GPIO_PORTB_DEN_R |= GPIO_PORTB_PIN5_EN;        	  // Enable pin 5 of PORTB 
+	GPIO_PORTB_DEN_R |= GPIO_PORTB_PIN4_EN;        	  // Enable pin 4 of PORTB 
+	
+	
+	GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN5_EN ; 				// Regular GPIO of PORTB
+  GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN5_EN;        // Disable analog function on pin 5 of PORTB
+	GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN5_EN;        // Regular port function
+	GPIO_PORTB_PCTL_R &= ~GPIO_PORTB_PIN4_EN ; 				// Regular GPIO of PORTB
+  GPIO_PORTB_AMSEL_R &= ~GPIO_PORTB_PIN4_EN;        // Disable analog function on pin 4 of PORTB
+	GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN4_EN;        // Regular port function
 }
 
 
