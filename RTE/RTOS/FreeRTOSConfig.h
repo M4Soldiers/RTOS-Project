@@ -129,7 +129,7 @@ extern uint32_t SystemCoreClock;
 
 /*********/ 
 
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 10 //lazem yb2a a2al men a2al interrupt 
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 2 //lazem yb2a a2al men a2al interrupt 
 
 /*********/
 
