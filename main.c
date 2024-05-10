@@ -1,4 +1,5 @@
-/* FreeRTOS includes. */ #include "FreeRTOS.h"
+/* FreeRTOS includes. */ 
+#include "FreeRTOS.h"
 
 #include "FreeRTOSConfig.h"
 
@@ -82,35 +83,30 @@ xTaskHandle jammingHandler;
 
 /*-----------------------------------------------------------*/
 int main(void) {
-  //vPORTF_init();
-  //	__asm ("CPSID  I\n");
   InitTask(NULL);
   PORTB_Init();
-  //PORTD_Init();
-  //vPORTD_init();
-
-  xBinarySemaphore_Driver = xSemaphoreCreateBinary();
-  xBinarySemaphore_Passenger = xSemaphoreCreateBinary();
-  xJammingSemaphore = xSemaphoreCreateBinary();
+  xBinarySemaphore_Driver = xSemaphoreCreateBinary(); //Just Creating semaphores
+  xBinarySemaphore_Passenger = xSemaphoreCreateBinary(); //Just Creating semaphores
+  xJammingSemaphore = xSemaphoreCreateBinary();//Just Creating semaphores
 
   xQueue_MainController = xQueueCreate(1, sizeof(long));
 
   if (xQueue_MainController != NULL && xBinarySemaphore_Driver != NULL) {
-    xTaskCreate(driverControl, "Driver Control", 128, NULL, 2, & driverControllerHandler);
-    xTaskCreate(mainController, "main Control", 128, NULL, 1, & mainControllerHandler);
-    xTaskCreate(passengerControl, "Passenger Control", 128, NULL, 2, & passengerControllerHandler);
-    xTaskCreate(vJammingTask, "Jamming Control", 128, NULL, 2, & jammingHandler);
+    xTaskCreate(driverControl, "Driver Control", 128, NULL, 2, & driverControllerHandler); //Driver control task Priority -> 2
+    xTaskCreate(mainController, "main Control", 128, NULL, 1, & mainControllerHandler);//Main control task Priority -> 1
+    xTaskCreate(passengerControl, "Passenger Control", 128, NULL, 2, & passengerControllerHandler);//Passenger control task Priority -> 2
+    xTaskCreate(vJammingTask, "Jamming Control", 128, NULL, 2, & jammingHandler);//Jamming control task Priority -> 2
 
-    vTaskStartScheduler();
+    vTaskStartScheduler(); //Start scheduler
   }
 
   for (;;);
 }
 
 /*-----------------------------------------------------------*/
-void mainController(void * pvParameters) {
-  uint32_t windowUP = 0x01;
-  uint32_t windowDown = 0x00;
+void mainController(void * pvParameters) { //Continous function of lowest priorty
+  uint32_t windowUP = 0x01;  // 1 indicates window up
+  uint32_t windowDown = 0x00; // 0 indicates window down
   unsigned int portB_Pin3, portB_Pin2;
 
   for (;;) {
@@ -119,25 +115,29 @@ void mainController(void * pvParameters) {
     portB_Pin2 = GPIO_PORTB_DATA_R & 0x04;
     //portB_Pin1 = GPIO_PORTB_DATA_R & 0x02;
 
-    if ((GPIO_PORTF_DATA_R & (1u << 0)) == 0) //Tiva button 0 is pressed //DRIVER WINDOW UP
+    if ((GPIO_PORTF_DATA_R & (1u << 0)) == 0) //Check if Tiva button 0 is pressed //DRIVER WINDOW UP
     {
+			//if PF0 is pressed we will send on our queue "WindowUP == 1" 
       xQueueSendToBack(xQueue_MainController, & windowUP, 0);
-      xSemaphoreGive(xBinarySemaphore_Driver);
+      xSemaphoreGive(xBinarySemaphore_Driver); //Then increment the xBinarySemaphore_Driver (give semaphore to driver task)
 
-    } else if ((GPIO_PORTF_DATA_R & (1u << 4)) == 0) //Tiva button 4 is pressed //DRIVER WINDOW DOWN
+    } else if ((GPIO_PORTF_DATA_R & (1u << 4)) == 0) //Check Tiva button 4 is pressed //DRIVER WINDOW DOWN
     {
+			//if PF4 is pressed we will send on our queue "WindowUP == 0" 
       xQueueSendToBack(xQueue_MainController, & windowDown, 0);
-      xSemaphoreGive(xBinarySemaphore_Driver);
+      xSemaphoreGive(xBinarySemaphore_Driver);//Then increment the xBinarySemaphore_Driver (give semaphore to driver task)
 
-    } else if (!portB_Pin3) // PORT B, PIN 3 //PASSENGER WINDOW UP
+    } else if (!portB_Pin3) // Check if PORT B, PIN 3 is pressed //PASSENGER WINDOW UP
     {
+			//if PB3 is pressed we will send on our queue "WindowUP == 1" 
       xQueueSendToBack(xQueue_MainController, & windowUP, 0);
-      xSemaphoreGive(xBinarySemaphore_Passenger);
+      xSemaphoreGive(xBinarySemaphore_Passenger); //Then increment the xBinarySemaphore_Passenger (give semaphore to passenger task)
 
-    } else if (!portB_Pin2) // PORT B, PIN 2 // PASSENGER WINDOW DOWN
+    } else if (!portB_Pin2) // Check if PORT B, PIN 2 is pressed //PASSENGER WINDOW DOWN
     {
+			//if PB2 is pressed we will send on our queue "WindowUP == 0" 
       xQueueSendToBack(xQueue_MainController, & windowDown, 0);
-      xSemaphoreGive(xBinarySemaphore_Passenger);
+      xSemaphoreGive(xBinarySemaphore_Passenger); //Then increment the xBinarySemaphore_Passenger (give semaphore to passenger task)
     }
 
   }
@@ -146,71 +146,112 @@ void mainController(void * pvParameters) {
 /*-----------------------------------------------------------*/
 void driverControl(void * pvParameter) // This function for driver controlling passenger's window
 {
-  xSemaphoreTake(xBinarySemaphore_Driver, 0);
-  uint32_t windowsDirection;
+  xSemaphoreTake(xBinarySemaphore_Driver, 0); //Just initialzing semaphore
+  
+	uint32_t windowsDirection;
   for (;;) {
-    xSemaphoreTake(xBinarySemaphore_Driver, portMAX_DELAY);
-    xQueueReceive(xQueue_MainController, & windowsDirection, portMAX_DELAY);
+  
+		xSemaphoreTake(xBinarySemaphore_Driver, portMAX_DELAY); //This sempahore will be blocked untill it recieves the semaphore
+		// or xBinarySemaphore_Driver == 1, which is given from the main control function when PF0 or PF4 is pressed
 
-    if (windowsDirection == 1) {
-      DelayPORTB(100);
-      if ((GPIO_PORTF_DATA_R & (1u << 0)) == 0) {
-        vToggle_Blue(); //MOTOR_UP
-        motorUP();
+    xQueueReceive(xQueue_MainController, & windowsDirection, portMAX_DELAY);
+		//We will recieve the queue here and check what value is sent from the main control function
+
+    if (windowsDirection == 1) { //if the value recieved from queue is 1 (indicates that window is going up) and PF0 is pressed
+
+      DelayPORTB(100); //Here is used to check for automatic/manual, it will delay for 100ms
+
+      if ((GPIO_PORTF_DATA_R & (1u << 0)) == 0) { //if after 100ms the button is still pressed -> then it's manual
+
+        vToggle_Blue(); //Blue Led to indicate motor up
+
+        motorUP(); //rotate the motor clockwise
+				
+				/*
+				This while will work as long as PF0 is pressed. If PB7 button is pressed (indicates jamming)
+				or if PB6 button is pressed (upper limit switch)-> the while loop will break 
+				*/
         while (((GPIO_PORTF_DATA_R & (1u << 0)) == 0) && ((GPIO_PORTB_DATA_R & (1u << 7)) != 0) && ((GPIO_PORTB_DATA_R & (1u << 6)) != 0));
         //PF0 is for motor UP, PB6 is for limit switch, PB7 is for jamming!
-        if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs
+				
+        if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs (PB7 is pressed) 
         {
-          xSemaphoreGive(xJammingSemaphore);
-          vTaskPrioritySet(jammingHandler, 3);
+          xSemaphoreGive(xJammingSemaphore); //it will give semaphore to the jamming
+
+          vTaskPrioritySet(jammingHandler, 3);// and will increase the jamming task priorty in order to go to the jamming task
         }
 
-      } else {
+      } else { // else if after 100ms the button is not pressed -> then it's automatic 
 
         int counter = 0;
+
         do {
-          vToggle_Blue(); //MOTOR_UP
-          motorUP();
+          vToggle_Blue(); //Blue Led to indicate motor up
+
+          motorUP();//rotate the motor clockwise
+					
+					/*
+						This do while will work as the counter didn't reach 100,000.
+						If PB7 button is pressed (indicates jamming)
+						or if PB6 button is pressed (upper limit switch)-> the do while loop will break 
+					*/
           if (counter > 100000 || (GPIO_PORTB_DATA_R & (1u << 7)) == 0 || (GPIO_PORTB_DATA_R & (1u << 6)) == 0) {
             break; // Break out of the loop if either GPIO_PORTB_DATA_R bit 7 or bit 6 is 0
           } else {
-            counter += 1;
+            counter += 1; //increments counter
           }
         } while (1);
 
         //PF0 is for motor UP, PB6 is for limit switch, PB7 is for jamming!
-        if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs
+        if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs (PB7 is pressed) 
         {
-          xSemaphoreGive(xJammingSemaphore);
-          vTaskPrioritySet(jammingHandler, 3);
+          xSemaphoreGive(xJammingSemaphore);//it will give semaphore to the jamming
+
+          vTaskPrioritySet(jammingHandler, 3);// and will increase the jamming task priorty in order to go to the jamming task
         }
 
       }
-    } else if (windowsDirection == 0) {
-			DelayPORTB(100);
-      if ((GPIO_PORTF_DATA_R & (1u << 4)) == 0) {
-      motorDOWN();
-      vToggle_Red(); //MOTOR_DOWN
+    } else if (windowsDirection == 0) {//else if the value recieved from queue is 0 (indicates that window is going down) and PF4 is pressed
+			
+			DelayPORTB(100); //Here is used to check for automatic/manual, it will delay for 100ms
+      
+			if ((GPIO_PORTF_DATA_R & (1u << 4)) == 0) { //if after 100ms the button is still pressed -> then it's manual
+      
+			motorDOWN(); //motor rotates anti-clockwise
+      
+			vToggle_Red(); //Red led to indicate motor down
       //PF4 is for motor down, PB5 is for limit switch
+			/*
+				This while will work as long as PF4 is pressed. If PB5 button is pressed (lower limit switch)-> the while loop will break 
+			*/
       while (((GPIO_PORTF_DATA_R & (1u << 4)) == 0) && ((GPIO_PORTB_DATA_R & (1u << 5)) != 0));
 			}
-			else
+			else // else if after 100ms the button is not pressed -> then it's automatic 
 			{
 				int counter = 0;
-        do {
-          vToggle_Red(); //MOTOR_DOWN
-          motorDOWN();
+      
+				do {
+          vToggle_Red(); //Red led to indicate motor down
+
+          motorDOWN();//motor rotates anti-clockwise
+					
+					 /*
+						This do while will work as long as the counter didn't reach 100,000.
+						If PB5 button is pressed (lower limit switch)-> the do while loop will break 
+					*/
           if (counter > 100000||(GPIO_PORTB_DATA_R & (1u << 5)) == 0) {
             break; // Break out of the loop if GPIO_PORTB_DATA_R bit 5 is 0
           } else {
-            counter += 1;
+            counter += 1; //increments counter
           }
         } while (1);
 			}
     }
-    vTurn_OFF();
-    motorOFF();
-    taskYIELD();
+    vTurn_OFF(); //turn off leds at the end
+
+    motorOFF(); //turn off motor at the end
+
+    taskYIELD(); //Task yeild to return to main control or go to other tasks of same priority
 
   }
 
@@ -219,33 +260,59 @@ void driverControl(void * pvParameter) // This function for driver controlling p
 void passengerControl(void * pvParameter) // This function for passengers controlling passenger's window
 {
 
-  xSemaphoreTake(xBinarySemaphore_Passenger, 0);
-  uint32_t windowsDirection;
-  for (;;) {
-    xSemaphoreTake(xBinarySemaphore_Passenger, portMAX_DELAY);
-    xQueueReceive(xQueue_MainController, & windowsDirection, portMAX_DELAY);
+  xSemaphoreTake(xBinarySemaphore_Passenger, 0); //Just initialzing semaphore
+  
+	uint32_t windowsDirection;
+  
+	for (;;) {
+    
+		xSemaphoreTake(xBinarySemaphore_Passenger, portMAX_DELAY); //This sempahore will be blocked untill it recieves the semaphore
+		// or xBinarySemaphore_Passenger == 1, which is given from the main control function when PB3 or PB2 is pressed
+    
+		xQueueReceive(xQueue_MainController, & windowsDirection, portMAX_DELAY);
+		//We will recieve the queue here and check what value is sent from the main control function
+
     if ((GPIO_PORTB_DATA_R & (1u << 4)) != 0) // if on/off switch on -> indicating passenger's control is deactivated
     {
+			// will only reach this part if PB4 is not pressed 
 
-      if (windowsDirection == 1) {
-			DelayPORTB(100);
-				if ((GPIO_PORTB_DATA_R & (1u << 3)) == 0) {
-					motorUP();
-					vToggle_Blue(); //MOTOR_UP
+      if (windowsDirection == 1) {//if the value recieved from queue is 1 (indicates that window is going up) and PB3 is pressed
+				
+			DelayPORTB(100); //Here is used to check for automatic/manual, it will delay for 100ms
+				
+				if ((GPIO_PORTB_DATA_R & (1u << 3)) == 0) { //if after 100ms the button is still pressed -> then it's manual
+					
+					motorUP();//rotate the motor clockwise
+					
+					vToggle_Blue(); //Blue Led to indicate motor up
+					
+					/*
+					This while will work as long as PB3 is pressed. If PB7 button is pressed (indicates jamming)
+					or if PB6 button is pressed (upper limit switch)-> the while loop will break 
+					*/
 					while (((GPIO_PORTB_DATA_R & (1u << 3)) == 0) && ((GPIO_PORTB_DATA_R & (1u << 7)) != 0) && ((GPIO_PORTB_DATA_R & (1u << 6)) != 0));
 					// PB3 is for motor up, PB7 is for jamming, PB6 is for limit switch
-					if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) // if jamming occurs
+					
+					if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs (PB7 is pressed) 
 					{
-						xSemaphoreGive(xJammingSemaphore);
-						vTaskPrioritySet(jammingHandler, 3);
+						xSemaphoreGive(xJammingSemaphore); //it will give semaphore to the jamming
+						
+						vTaskPrioritySet(jammingHandler, 3);// and will increase the jamming task priorty in order to go to the jamming task
 					}
 				}
-				else
+				else // else if after 100ms the button is not pressed -> then it's automatic 
 				{
 						int counter = 0;
 						do {
-							vToggle_Blue(); //MOTOR_UP
-							motorUP();
+							vToggle_Blue();//Blue Led to indicate motor up
+							
+							motorUP();//rotate the motor clockwise
+							
+							/*
+							This do while will work as the counter didn't reach 100,000.
+							If PB7 button is pressed (indicates jamming)
+							or if PB6 button is pressed (upper limit switch)-> the do while loop will break 
+							*/
 							if (counter > 100000 || (GPIO_PORTB_DATA_R & (1u << 7)) == 0 || (GPIO_PORTB_DATA_R & (1u << 6)) == 0) {
 								break; // Break out of the loop if either GPIO_PORTB_DATA_R bit 7 or bit 6 is 0
 							} else {
@@ -254,40 +321,49 @@ void passengerControl(void * pvParameter) // This function for passengers contro
 						} while (1);
 
 						//PF0 is for motor UP, PB6 is for limit switch, PB7 is for jamming!
-						if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs
+						if ((GPIO_PORTB_DATA_R & (1u << 7)) == 0) //if jamming occurs (PB7 is pressed) 
 						{
-							xSemaphoreGive(xJammingSemaphore);
-							vTaskPrioritySet(jammingHandler, 3);
+							xSemaphoreGive(xJammingSemaphore);//it will give semaphore to the jamming
+							vTaskPrioritySet(jammingHandler, 3);// and will increase the jamming task priorty in order to go to the jamming task
 						}
 				}
 
 		} 
-				else if (windowsDirection == 0) 
+				else if (windowsDirection == 0) //else if the value recieved from queue is 0 (indicates that window is going down) and PB2 is pressed
 					{
-									DelayPORTB(100);
-      if ((GPIO_PORTB_DATA_R & (1u << 2)) == 0) {
+						DelayPORTB(100); //Here is used to check for automatic/manual, it will delay for 100ms
+      if ((GPIO_PORTB_DATA_R & (1u << 2)) == 0) { //if after 100ms the button is still pressed -> then it's manual
 						
-					motorDOWN();
-					vToggle_Red(); //MOTOR_DOWN
+					motorDOWN(); //motor rotates anti-clockwise
+					vToggle_Red();//Red led to indicate motor down
+					/*
+						This while will work as long as PB2 is pressed. If PB5 button is pressed (lower limit switch)-> the while loop will break 
+					*/
 					while (((GPIO_PORTB_DATA_R & (1u << 2)) == 0) && ((GPIO_PORTB_DATA_R & (1u << 5)) != 0));
         // PB2 is for motor down, PB5 is for limit switch
 				}
-			else{
+			else{ // else if after 100ms the button is not pressed -> then it's automatic 
 				int counter = 0;
         do {
-          vToggle_Red(); //MOTOR_DOWN
-          motorDOWN();
+          vToggle_Red();//Red led to indicate motor down
+					
+          motorDOWN();//motor rotates anti-clockwise
+					 /*
+						This do while will work as long as the counter didn't reach 100,000.
+						If PB5 button is pressed (lower limit switch)-> the do while loop will break 
+					*/
           if (counter > 100000||(GPIO_PORTB_DATA_R & (1u << 5)) == 0) {
             break; // Break out of the loop if GPIO_PORTB_DATA_R bit 5 is 0
           } else {
-            counter += 1;
+            counter += 1; //increments counter
           }
         } while (1);}
 			}
     }
-    motorOFF();
-    vTurn_OFF();
-    taskYIELD();
+		//Will reach here immediately if PB4 is pressed (indicating that passenger control is deactivated)
+    motorOFF(); //turn off motor at the end
+    vTurn_OFF(); //turn off leds at the end
+    taskYIELD(); //Task yeild to return to main control or go to other tasks of same priority
 
   }
 
@@ -296,10 +372,12 @@ void passengerControl(void * pvParameter) // This function for passengers contro
 /*-----------------------------------------------------------*/
 
 static void vJammingTask(void * pvParameters) {
-  xSemaphoreTake(xJammingSemaphore, 0);
-  for (;;) {
-    xSemaphoreTake(xJammingSemaphore, portMAX_DELAY);
-
+  xSemaphoreTake(xJammingSemaphore, 0); //just intialzing semaphore
+  for (;;) { 
+    xSemaphoreTake(xJammingSemaphore, portMAX_DELAY); //Task blocked untill sempahore is recieved
+		
+		//If semaphore recieved
+		
     /** TURN OFF MOTOR FIRST **/
     motorOFF();
     vTurn_OFF();
@@ -327,15 +405,12 @@ static void vJammingTask(void * pvParameters) {
 /************** INIT FUNCTIONS IMPLEMENTATIONS ****************/
 //This function is used to initialize UART and buttons
 void InitTask(void * pvParameters) {
-  //UARTInit(0,1,1,104,11,0, 3);
   DIO_Init(PORT_F, 0, IN);
   DIO_Init(PORT_F, 1, OUT);
   DIO_Init(PORT_F, 2, OUT);
   DIO_Init(PORT_F, 3, OUT);
   DIO_Init(PORT_F, 4, IN);
   motorInit();
-  //DIO_Init(PORT_D, 0, IN);
-  //DIO_Init(PORT_B,3, IN);
 }
 
 void DelayPORTB(unsigned int delay) {
@@ -386,84 +461,3 @@ void PORTB_Init(void) {
   GPIO_PORTB_AFSEL_R &= ~GPIO_PORTB_PIN4_EN; // Regular port function
 }
 
-//void PORTD_Init(void)
-//{
-//	SYSCTL_RCGCGPIO_R |= GPIO_PORTD_CLK_EN;           //activate clock for Port D
-//  DelayPORTB(10);           															//Delay 10 msec to allow clock to start on PORTD  
-//	GPIO_PORTD_LOCK_R = 0x4C4F434B;           				//unlock GPIO of PORTD
-//	GPIO_PORTD_CR_R = 0x01;                   				//Enable GPIOPUR register enable to commit
-//	GPIO_PORTD_PUR_R |= GPIO_PORTD_PIN2_EN;   				//Enable Pull Up SW on PD2	
-//	GPIO_PORTD_DEN_R |= GPIO_PORTD_PIN2_EN;        	  // Enable pin 2 of PORTD 
-
-//	GPIO_PORTD_PCTL_R &= ~GPIO_PORTD_PIN2_EN ; 				// Regular GPIO of PORTD
-//  GPIO_PORTD_AMSEL_R &= ~GPIO_PORTD_PIN2_EN;        // Disable analog function on pin 2 of PORTD
-//	GPIO_PORTD_AFSEL_R &= ~GPIO_PORTD_PIN2_EN;        // Regular port function
-//}
-
-//void vPORTF_init() 
-//{
-//	SYSCTL_RCGCGPIO_R |= 0x20;
-//  while(!(SYSCTL_PRGPIO_R& 0x20));
-//	  GPIO_PORTF_LOCK_R   = 0x4C4F434B;                       
-//    GPIO_PORTF_CR_R    |=  (1<<0|1<<1|1<<2|1<<3|1<<4);  
-//		GPIO_PORTF_AMSEL_R |= 0x00;    
-//	  GPIO_PORTF_PCTL_R = 0x00000000;  
-//	  GPIO_PORTF_AFSEL_R = 0x00;      
-//    GPIO_PORTF_DIR_R   &= ~((1<<0) |(1<<4));                
-//    GPIO_PORTF_DIR_R   |=  ((1<<1) | (1<<2) | (1<<3));       
-//    GPIO_PORTF_PUR_R   |=  ((1<<0)|(1<<4));                  
-//    GPIO_PORTF_DEN_R   |=  (1<<0|1<<1|1<<2|1<<3|1<<4);                             
-//    GPIO_PORTF_DATA_R  &= ~((1<<1)|(1<<2)|(1<<3));      
-//		GPIO_PORTF_ICR_R = 0x11;     // Clear any Previous Interrupt 
-//		GPIO_PORTF_IM_R |=0x11;      
-//// Unmask the interrupts for PF0 and PF4
-//		GPIO_PORTF_IS_R |= 0x11;     // Make bits PF0 and PF4 level sensitive
-//		GPIO_PORTF_IEV_R &= ~0x11;   // Sense on Low Level
-//		NVIC_EN0_R |= (1<<PortF_IRQn);        
-//}
-
-//void vPORTD_init() 
-//{
-//	SYSCTL_RCGCGPIO_R |= 0x08;
-//  while(!(SYSCTL_PRGPIO_R& 0x08));
-//	  GPIO_PORTD_LOCK_R   = 0x4C4F434B;                       
-//    GPIO_PORTD_CR_R    |=  (1<<0);  
-//		GPIO_PORTD_AMSEL_R |= 0x00;    
-//	  GPIO_PORTD_PCTL_R = 0x00000000;  
-//	  GPIO_PORTD_AFSEL_R = 0x00;      
-//    GPIO_PORTD_DIR_R   &= ~((1<<0));                
-//    //GPIO_PORTF_DIR_R   |=  ((1<<1) | (1<<2) | (1<<3));       
-//    GPIO_PORTD_PUR_R   |=  ((1<<0));                  
-//    GPIO_PORTD_DEN_R   |=  (1<<0);                             
-//    //GPIO_PORTF_DATA_R  &= ~((1<<1)|(1<<2)|(1<<3));      
-//		GPIO_PORTD_ICR_R = 0x11;     // Clear any Previous Interrupt 
-//		GPIO_PORTD_IM_R |=0x11;      
-//		GPIO_PORTD_IS_R |= 0x11;     // Make bits PF0 and PF4 level sensitive
-//		GPIO_PORTD_IEV_R &= ~0x11;   // Sense on Low Level
-//		NVIC_EN0_R |= (1<<PortD_IRQn);        
-//}
-
-///*-----------------------------------------------------------*/
-
-//void GPIOD_Handler( void )
-//{
-//portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-//		vTaskPrioritySet(jammingHandler, 3);
-//    /* 'Give' the semaphore to unblock the task. */
-//    xSemaphoreGiveFromISR( xJammingSemaphore, &xHigherPriorityTaskWoken );
-//    /* Clear the software interrupt bit using the interrupt controllers
-//    Clear Pending register. */
-//    GPIO_PORTD_ICR_R = 0x11;     // Clear any Previous Interrupt 
-
-//    /* Giving the semaphore may have unblocked a task - if it did and the
-//    unblocked task has a priority equal to or above the currently executing
-//    task then xHigherPriorityTaskWoken will have been set to pdTRUE and
-//    portEND_SWITCHING_ISR() will force a context switch to the newly unblocked
-//    higher priority task.
-
-//    NOTE: The syntax for forcing a context switch within an ISR varies between
-//    FreeRTOS ports.  The portEND_SWITCHING_ISR() macro is provided as part of
-//    the Cortex M3 port layer for this purpose.  taskYIELD() must never be called
-//    from an ISR! */
-//    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
-//}
